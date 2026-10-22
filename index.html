@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>تبرّع معانا</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --neon: #00d4ff;
+    --neon-2: #0ea5ff;
+    --neon-deep: #0077b6;
+    --glow: rgba(0, 212, 255, 0.45);
+    --bg: #05070c;
+    --card: #0b0f17;
+    --card-2: #0f1420;
+    --border: rgba(0, 212, 255, 0.16);
+    --border-soft: rgba(255,255,255,0.06);
+    --text: #eef6ff;
+    --muted: #7c8aa0;
+    --green: #22e584;
+    --red: #ff4d6d;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body { background: var(--bg); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text);
+    font-family: 'Alexandria', sans-serif;
+    padding: 0 0 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ═══ خلفية نيون متحركة ═══ */
+  .bg-glow {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 600px 400px at 20% -10%, rgba(0,212,255,0.18), transparent 60%),
+      radial-gradient(ellipse 500px 400px at 100% 10%, rgba(14,165,255,0.12), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 50% 110%, rgba(0,119,182,0.15), transparent 60%);
+  }
+
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse 100% 60% at 50% 0%, black, transparent 80%);
+  }
+
+  .content { position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+  /* ═══ Header ═══ */
+  .top-bar {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 22px 16px 0;
+  }
+
+  .top-bar .brand {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: var(--neon);
+  }
+
+  /* ═══ Hero ═══ */
+  .hero {
+    text-align: center;
+    max-width: 480px;
+    padding: 28px 20px 10px;
+  }
+
+  .hero .icon-ring {
+    width: 84px; height: 84px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hero .icon-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid var(--neon);
+    opacity: 0.35;
+    animation: ringPulse 2.4s infinite ease-out;
+  }
+
+  .hero .icon-ring::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    border: 1px solid var(--neon);
+    opacity: 0.15;
+    animation: ringPulse 2.4s infinite ease-out 0.5s;
+  }
+
+  @keyframes ringPulse {
+    0% { transform: scale(0.85); opacity: 0.5; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  .hero .icon-core {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 25%, #1a2638, #060a10 75%);
+    border: 1px solid rgba(0,212,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 24px 2px var(--glow), inset 0 0 18px rgba(0,212,255,0.12);
+  }
+
+  .hero .icon-core svg { width: 34px; height: 34px; stroke: var(--neon); filter: drop-shadow(0 0 6px var(--glow)); }
+
+  .hero h1 {
+    font-size: 27px;
+    margin: 0 0 10px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--neon), var(--neon-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0 auto;
+    max-width: 360px;
+  }
+
+  /* ═══ شريط ثقة ═══ */
+  .trust-strip {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-soft);
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .trust-item { text-align: center; }
+  .trust-item .num {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--neon);
+    display: block;
+  }
+  .trust-item .lbl {
+    font-size: 10.5px;
+    color: var(--muted);
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* ═══ Card ═══ */
+  .card {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(180deg, var(--card), #080a10);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 24px 20px;
+    margin: 24px 16px 16px;
+    box-shadow: 0 0 0 1px rgba(0,212,255,0.04), 0 20px 60px -20px rgba(0,212,255,0.15);
+    position: relative;
+  }
+
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .section-title svg { width: 14px; height: 14px; stroke: var(--neon); }
+
+  .amount-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .amount-chip {
+    background: var(--card-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 13px;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .amount-chip::after {
+    content: 'EGP';
+    display: block;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .amount-chip.active {
+    border-color: var(--neon);
+    background: rgba(0,212,255,0.08);
+    color: var(--neon);
+    box-shadow: 0 0 0 1px var(--neon), 0 0 16px -4px var(--glow);
+  }
+
+  .amount-chip[data-amount="other"]::after { content: ''; }
+
+  .field { margin-bottom: 16px; }
+
+  .field label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 7px;
+    font-weight: 500;
+  }
+
+  .field label svg { width: 13px; height: 13px; stroke: var(--muted); }
+
+  .field input {
+    width: 100%;
+    background: var(--card-2);
+    border: 1px solid var(--border-soft);
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: 13px;
+    font-size: 15px;
+    font-family: inherit;
+    text-align: center;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--neon);
+    box-shadow: 0 0 0 1px var(--neon), 0 0 14px -4px var(--glow);
+  }
+
+  .field input::placeholder { color: #44536b; }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .method-chip {
+    background: var(--card-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 13px;
+    padding: 14px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .method-chip.active {
+    border-color: var(--neon);
+    background: rgba(0,212,255,0.08);
+    box-shadow: 0 0 0 1px var(--neon), 0 0 16px -4px var(--glow);
+  }
+
+  .method-chip svg {
+    width: 22px; height: 22px;
+    stroke: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .method-chip.active svg { stroke: var(--neon); }
+
+  .method-chip .m-name {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    display: block;
+  }
+
+  .method-chip.active .m-name { color: var(--text); }
+
+  .donate-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--neon-2), var(--neon-deep));
+    color: #04121c;
+    border: none;
+    padding: 17px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    box-shadow: 0 6px 24px -4px var(--glow), inset 0 1px 0 rgba(255,255,255,0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.2px;
+  }
+
+  .donate-btn svg { width: 19px; height: 19px; stroke: #04121c; stroke-width: 2.4; }
+
+  .donate-btn:active { transform: scale(0.97); }
+  .donate-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  .status-box {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.9;
+    display: none;
+  }
+  .status-box.show { display: block; animation: fadeUp 0.3s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .status-box.pending { background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.3); color: var(--neon); }
+  .status-box.success { background: rgba(34,229,132,0.08); border: 1px solid rgba(34,229,132,0.3); color: var(--green); }
+  .status-box.error { background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.3); color: var(--red); }
+
+  .status-box .ref-code {
+    direction: ltr;
+    display: inline-block;
+    background: rgba(0,0,0,0.35);
+    padding: 3px 10px;
+    border-radius: 7px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--text);
+    border: 1px solid var(--border-soft);
+  }
+
+  .status-box .status-head {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .status-box .status-head svg { width: 17px; height: 17px; }
+
+  .confirm-btn {
+    width: 100%;
+    background: var(--green);
+    color: #042014;
+    border: none;
+    padding: 13px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .confirm-btn svg { width: 16px; height: 16px; stroke: #042014; stroke-width: 3; }
+  .confirm-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* ═══ Footer ═══ */
+  .foot-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    text-align: right;
+    color: #52607a;
+    font-size: 11.5px;
+    max-width: 380px;
+    line-height: 1.9;
+    margin: 8px 16px 0;
+  }
+  .foot-note svg { width: 15px; height: 15px; stroke: var(--neon); flex-shrink: 0; margin-top: 2px; }
+
+  .powered {
+    margin-top: 22px;
+    font-size: 10.5px;
+    color: #39445a;
+    letter-spacing: 0.4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="grid-overlay"></div>
+
+<div class="content">
+
+  <div class="hero">
+    <div class="icon-ring">
+      <div class="icon-core">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1>كل تبرّع <span class="accent">بيفرق فرق حقيقي</span></h1>
+    <p>دعمك بيوصل مباشرة من غير وسيط ومن غير عمولات مخفية. اختار المبلغ وطريقة الدفع، والعملية بتاخد أقل من دقيقة.</p>
+
+    <div class="trust-strip">
+      <div class="trust-item">
+        <span class="num">100%</span>
+        <span class="lbl">آمن ومشفّر</span>
+      </div>
+      <div class="trust-item">
+        <span class="num">&lt;60s</span>
+        <span class="lbl">وقت التنفيذ</span>
+      </div>
+      <div class="trust-item">
+        <span class="num">24/7</span>
+        <span class="lbl">متاح دايمًا</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      اختار المبلغ
+    </div>
+    <div class="amount-grid" id="amountGrid">
+      <div class="amount-chip" data-amount="25">25</div>
+      <div class="amount-chip active" data-amount="50">50</div>
+      <div class="amount-chip" data-amount="100">100</div>
+      <div class="amount-chip" data-amount="200">200</div>
+      <div class="amount-chip" data-amount="500">500</div>
+      <div class="amount-chip" data-amount="other">مبلغ آخر</div>
+    </div>
+
+    <div class="field" id="customAmountField" style="display:none;">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        المبلغ المخصص
+      </label>
+      <input type="number" id="customAmount" placeholder="اكتب المبلغ بالجنيه" min="5">
+    </div>
+
+    <div class="field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        رقم الموبايل
+      </label>
+      <input type="tel" id="phone" placeholder="01xxxxxxxxx" maxlength="11">
+    </div>
+
+    <div class="field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        اسمك (اختياري)
+      </label>
+      <input type="text" id="donorName" placeholder="هيظهر في إشعار الشكر">
+    </div>
+
+    <div class="field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        طريقة الدفع
+      </label>
+      <div class="method-grid" id="methodGrid">
+        <div class="method-chip active" data-method="vf_cash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span class="m-name">فودافون كاش</span>
+        </div>
+        <div class="method-chip" data-method="or_cash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span class="m-name">أورنج كاش</span>
+        </div>
+        <div class="method-chip" data-method="et_cash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span class="m-name">اتصالات كاش</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="donate-btn" id="donateBtn" onclick="startDonation()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span id="donateBtnText">تبرّع الآن</span>
+    </button>
+
+    <div class="status-box" id="statusBox"></div>
+  </div>
+
+  <div class="foot-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    عملية الدفع بتتم مباشرة من خلال بوابة دفع آمنة ومشفّرة بالكامل، ومفيش أي بيانات حساسة بتتحفظ عندنا.
+  </div>
+
+  <div class="powered">PAYMENTS SECURED BY SHA7NAWY GATEWAY</div>
+
+</div>
+
+<script>
+  const API_BASE = 'https://api-pay.spcfy.eu';
+
+  const checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const clockIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+  const alertIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+
+  let selectedAmount = 50;
+  let selectedMethod = 'vf_cash';
+  let currentReference = null;
+
+  document.querySelectorAll('.amount-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      const val = chip.dataset.amount;
+      const customField = document.getElementById('customAmountField');
+
+      if (val === 'other') {
+        customField.style.display = 'block';
+        document.getElementById('customAmount').focus();
+        selectedAmount = Number(document.getElementById('customAmount').value) || null;
+      } else {
+        customField.style.display = 'none';
+        selectedAmount = Number(val);
+      }
+    });
+  });
+
+  document.getElementById('customAmount').addEventListener('input', (e) => {
+    selectedAmount = Number(e.target.value) || null;
+  });
+
+  document.querySelectorAll('.method-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.method-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedMethod = chip.dataset.method;
+    });
+  });
+
+  function isValidPhone(phone) {
+    return /^01[0125][0-9]{8}$/.test(phone);
+  }
+
+  function showStatus(type, headIcon, headText, bodyHtml) {
+    const box = document.getElementById('statusBox');
+    box.className = 'status-box show ' + type;
+    box.innerHTML = `<div class="status-head">${headIcon}<span>${headText}</span></div>${bodyHtml}`;
+  }
+
+  function setLoading(loading, text) {
+    const btn = document.getElementById('donateBtn');
+    btn.disabled = loading;
+    document.getElementById('donateBtnText').textContent = text || 'تبرّع الآن';
+  }
+
+  async function startDonation() {
+    const phone = document.getElementById('phone').value.trim();
+    const donorName = document.getElementById('donorName').value.trim();
+
+    if (!selectedAmount || selectedAmount < 5) {
+      showStatus('error', alertIcon, 'مبلغ غير صحيح', 'اختار أو اكتب مبلغ صحيح (5 جنيه على الأقل).');
+      return;
+    }
+    if (!isValidPhone(phone)) {
+      showStatus('error', alertIcon, 'رقم غير صحيح', 'اكتب رقم موبايل مصري صحيح (01xxxxxxxxx).');
+      return;
+    }
+
+    setLoading(true, 'جاري الإرسال...');
+    showStatus('pending', clockIcon, 'جاري إنشاء العملية...', 'لحظات من فضلك.');
+
+    const orderId = 'DON-' + Date.now().toString(36).toUpperCase();
+
+    try {
+      const res = await fetch(API_BASE + '/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: orderId,
+          number: phone,
+          amount: selectedAmount,
+          method: selectedMethod,
+          customer_name: donorName || undefined,
+          description: 'تبرّع' + (donorName ? ' من ' + donorName : ''),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data?.data?.reference) {
+        showStatus('error', alertIcon, 'حصل خطأ', data.error || 'تعذر إنشاء العملية، حاول تاني.');
+        setLoading(false);
+        return;
+      }
+
+      currentReference = data.data.reference;
+
+      const methodText = {
+        vf_cash: 'يُطلب الكود <b>*9*1#</b> على الموبايل',
+        or_cash: 'يُفتح تطبيق Orange Cash وتتم الموافقة على الإشعار',
+        et_cash: 'يُطلب الكود <b>*777*11#</b> أو الموافقة عبر تطبيق e& Money',
+      }[selectedMethod];
+
+      showStatus(
+        'pending', clockIcon, 'بانتظار الموافقة',
+        `اتبعت طلب موافقة إلى <b>${phone}</b>.<br>${methodText}.<br><br>` +
+        `كود العملية: <span class="ref-code">${currentReference}</span>` +
+        `<button class="confirm-btn" id="confirmBtn" onclick="confirmDonation()">${checkIcon}<span>تم التأكيد على الهاتف</span></button>`
+      );
+
+      setLoading(false, 'تبرّع الآن');
+
+    } catch (err) {
+      showStatus('error', alertIcon, 'تعذر الاتصال', 'مفيش اتصال بالسيرفر حاليًا، حاول تاني.');
+      setLoading(false);
+    }
+  }
+
+  async function confirmDonation() {
+    if (!currentReference) return;
+
+    const btn = document.getElementById('confirmBtn');
+    if (btn) { btn.disabled = true; btn.innerHTML = `${clockIcon}<span>جاري التأكيد...</span>`; }
+
+    try {
+      const res = await fetch(API_BASE + '/api/payment/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reference: currentReference }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data?.success) {
+        showStatus(
+          'success', checkIcon, 'تم تأكيد التبرّع',
+          `شكرًا جزيلاً لدعمك، وصل بأمان.<br><br>كود العملية: <span class="ref-code">${currentReference}</span>`
+        );
+      } else {
+        showStatus(
+          'error', alertIcon, 'لم تكتمل الموافقة بعد',
+          (data.error || 'لسه مفيش موافقة من الهاتف، استنى شوية وجرب تاني.') +
+          `<button class="confirm-btn" id="confirmBtn" onclick="confirmDonation()">${checkIcon}<span>إعادة المحاولة</span></button>`
+        );
+      }
+    } catch (err) {
+      showStatus('error', alertIcon, 'تعذر الاتصال', 'مفيش اتصال بالسيرفر حاليًا.');
+    }
+  }
+</script>
+
+</body>
+</html>
